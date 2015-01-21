@@ -44,5 +44,6 @@
         android:text="Sign Up"
         android:id="@+id/signUpTextView"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"/>
 </RelativeLayout>
