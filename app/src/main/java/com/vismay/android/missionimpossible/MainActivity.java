@@ -2,7 +2,6 @@ package com.vismay.android.missionimpossible;
 
 import java.util.Locale;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -12,13 +11,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.parse.ParseAnalytics;
+import com.parse.ParseUser;
+
+//import org.xml.sax.Parser;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -37,13 +40,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-
+    public static final String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        ParseAnalytics.trackAppOpened(getIntent());
+        Log.d(TAG,"MAIn");
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            // do stuff with the user
+            Log.i(TAG,currentUser.getUsername());
+        } else {
+            // show the signup or login screen
+            Intent intent = new Intent(this,LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -97,6 +112,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id == R.id.logout){
+            ParseUser.logOut();
+            Intent intent = new Intent(this,LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

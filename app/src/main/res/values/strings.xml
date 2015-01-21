@@ -9,5 +9,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="passwordField">Password</string>
+    <string name="errorSignInMessage">Both fields have to be filled up</string>
+    <string name="errorSignInTitle">Error in SignUp!</string>
+
 
 </resources>
