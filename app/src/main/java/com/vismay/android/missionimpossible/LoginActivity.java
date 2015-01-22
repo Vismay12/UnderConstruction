@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_login);
         mSignUpText = (TextView)findViewById(R.id.signUpTextView);
         mSignUpText.setOnClickListener(new View.OnClickListener() {
@@ -45,7 +47,6 @@ public class LoginActivity extends ActionBarActivity {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"mSignInButton Clicked");
                 String username = mUsername.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 if (username.isEmpty() || password.isEmpty()) {
@@ -56,8 +57,11 @@ public class LoginActivity extends ActionBarActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 } else {
+                    setSupportProgressBarIndeterminateVisibility(true);
+
                     ParseUser.logInInBackground(username, password, new LogInCallback() {
                         public void done(ParseUser user, ParseException e) {
+                            setSupportProgressBarIndeterminateVisibility(false);
                             Log.d(TAG,"mSignInButton Clicked"+user);
                             if (user != null) {
 
@@ -68,10 +72,6 @@ public class LoginActivity extends ActionBarActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-
-
-
-
 
                             } else {
                                 // Signup failed. Look at the ParseException to see what happened.

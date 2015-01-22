@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -24,6 +25,8 @@ public class SignUpActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         setContentView(R.layout.activity_sign_up);
         mUsername = (EditText)findViewById(R.id.signUpName);
         mPassword = (EditText)findViewById(R.id.signUpPassword);
@@ -33,7 +36,6 @@ public class SignUpActivity extends ActionBarActivity {
         mSignupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String username = mUsername.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String email = mEmail.getText().toString().trim();
@@ -47,6 +49,8 @@ public class SignUpActivity extends ActionBarActivity {
                     dialog.show();
                 }
                 else{
+                    setSupportProgressBarIndeterminateVisibility(true);
+
                     ParseAnalytics.trackAppOpened(getIntent());
 
                     ParseUser newUser = new ParseUser();
@@ -56,6 +60,8 @@ public class SignUpActivity extends ActionBarActivity {
                     newUser.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
+                            setSupportProgressBarIndeterminateVisibility(false);
+
                             if(e==null){
                                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
